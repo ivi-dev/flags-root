@@ -1,14 +1,6 @@
 name: flags
 
 services:
-  be:
-    build:
-      context: BE
-      dockerfile: BE/Dockerfile
-  fe:
-    build:
-      context: FE
-      dockerfile: FE/Dockerfile
   db:
     build:
       context: Data-Harvester/DB
@@ -16,7 +8,42 @@ services:
     volumes:
       - db-config:/data/configdb
       - db-data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME_FILE=/run/secrets/db-root-user
+      - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/db-root-pass
+    ports:
+      - "27017:27017"
+    networks:
+      - flags
+  be:
+    build:
+      context: BE
+      dockerfile: BE/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - flags
+    ports:
+      - "444:444"
+  fe:
+    build:
+      context: FE
+      dockerfile: FE/Dockerfile
+    depends_on:
+      - be
+    ports:
+      - "443:444"
+      - "80:80"
 
 volumes:
   db-config:
   db-data:
+
+secrets:
+  db-root-user:
+    file: ./.secrets/db-root-user
+  db-root-pass:
+    file: ./.secrets/db-root-pass
+
+networks:
+  flags:
