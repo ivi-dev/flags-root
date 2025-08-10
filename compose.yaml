@@ -1,0 +1,22 @@
+name: flags
+
+services:
+  be:
+    build:
+      context: BE
+      dockerfile: BE/Dockerfile
+  fe:
+    build:
+      context: FE
+      dockerfile: FE/Dockerfile
+  db:
+    build:
+      context: Data-Harvester/DB
+      dockerfile: Data-Harvester/DB/Dockerfile
+    volumes:
+      - db-config:/data/configdb
+      - db-data:/data/db
+
+volumes:
+  db-config:
+  db-data:
