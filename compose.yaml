@@ -19,16 +19,37 @@ services:
     build:
       context: BE
       dockerfile: BE/Dockerfile
+    volumes:
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
     depends_on:
       - db
     networks:
       - flags
     ports:
       - "444:444"
+  data-harvester:
+    build:
+      context: Data-Harvester
+      dockerfile: Data-Harvester/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - flags
+  cert-manager:
+    build:
+      context: Certificate-Manager
+      dockerfile: Certificate-Manager/Dockerfile
+    volumes:
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
   fe:
     build:
       context: FE
       dockerfile: FE/Dockerfile
+    volumes:
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
     depends_on:
       - be
     ports:
@@ -38,6 +59,8 @@ services:
 volumes:
   db-config:
   db-data:
+  cert-public:
+  cert-private:
 
 secrets:
   db-root-user:
