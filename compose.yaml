@@ -7,16 +7,26 @@ services:
     volumes:
       - db-config:/data/configdb
       - db-data:/data/db
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
+      - db-logs:/var/log/mongodb
+      - db-dumps:/var/mongo/dumps
     secrets:
       - db-root-user
       - db-root-pass
+      - db-data-harvester-user
+      - db-data-harvester-pass
+      - db-backend-user
+      - db-backend-pass
     environment:
       - MONGO_INITDB_ROOT_USERNAME_FILE=/run/secrets/db-root-user
       - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/db-root-pass
+      - MONGO_INITDB_DATABASE=admin
     ports:
       - "27017:27017"
     networks:
       - flags
+    command: --config /etc/mongod.conf
   be:
     build:
       context: BE
@@ -47,6 +57,8 @@ services:
       - db
     networks:
       - flags
+    volumes:
+      - data-harvest-logs:/opt/flags/logs
   cert-manager:
     build:
       context: Certificate-Manager
@@ -57,14 +69,25 @@ services:
 volumes:
   db-config:
   db-data:
+  db-logs:
+  db-dumps:
   cert-public:
   cert-private:
+  data-harvest-logs:
 
 secrets:
   db-root-user:
     file: .secrets/db-root-user
   db-root-pass:
     file: .secrets/db-root-pass
+  db-data-harvester-user:
+    file: .secrets/db-data-harvester-user
+  db-data-harvester-pass:
+    file: .secrets/db-data-harvester-pass
+  db-backend-user:
+    file: .secrets/db-backend-user
+  db-backend-pass:
+    file: .secrets/db-backend-pass
 
 networks:
   flags:
