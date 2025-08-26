@@ -59,6 +59,8 @@ services:
       - flags
     volumes:
       - data-harvest-logs:/opt/flags/logs
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
   cert-manager:
     build:
       context: Certificate-Manager
