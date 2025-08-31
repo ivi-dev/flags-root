@@ -34,6 +34,7 @@ services:
       - cert-public:/etc/ssl/certs/flags
       - cert-private:/etc/ssl/private/flags
       - be-cache:/var/cache/nginx/flags
+      - be-nginx-logs:/var/log/nginx
     depends_on:
       - db
     networks:
@@ -78,6 +79,7 @@ volumes:
   cert-private:
   data-harvest-logs:
   be-cache:
+  be-nginx-logs:
 
 secrets:
   db-root-user:
