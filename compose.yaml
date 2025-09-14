@@ -47,6 +47,7 @@ services:
     volumes:
       - cert-public:/etc/ssl/certs/flags
       - cert-private:/etc/ssl/private/flags
+      - fe-nginx-logs:/var/log/nginx
     depends_on:
       - be
     ports:
@@ -80,6 +81,7 @@ volumes:
   data-harvest-logs:
   be-cache:
   be-nginx-logs:
+  fe-nginx-logs:
 
 secrets:
   db-root-user:
