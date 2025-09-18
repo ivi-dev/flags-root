@@ -5,7 +5,6 @@ services:
     build:
       context: Data-Harvester/DB
     volumes:
-      - db-config:/data/configdb
       - db-data:/data/db
       - cert-public:/etc/ssl/certs/flags
       - cert-private:/etc/ssl/private/flags
@@ -18,15 +17,10 @@ services:
       - db-data-harvester-pass
       - db-backend-user
       - db-backend-pass
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME_FILE=/run/secrets/db-root-user
-      - MONGO_INITDB_ROOT_PASSWORD_FILE=/run/secrets/db-root-pass
-      - MONGO_INITDB_DATABASE=admin
     ports:
       - "27017:27017"
     networks:
       - flags
-    command: --config /etc/mongod.conf
   be:
     build:
       context: BE
@@ -72,7 +66,6 @@ services:
       - cert-private:/etc/ssl/private/flags
 
 volumes:
-  db-config:
   db-data:
   db-logs:
   db-dumps:
