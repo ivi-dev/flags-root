@@ -4,12 +4,13 @@ services:
   db:
     build:
       context: Data-Harvester/DB
-    volumes:
-      - db-data:/data/db
-      - cert-public:/etc/ssl/certs/flags
-      - cert-private:/etc/ssl/private/flags
-      - db-logs:/var/log/mongodb
-      - db-dumps:/var/mongo/dumps
+      secrets:
+        - db-root-user
+        - db-root-pass
+        - db-data-harvester-user
+        - db-data-harvester-pass
+        - db-backend-user
+        - db-backend-pass
     secrets:
       - db-root-user
       - db-root-pass
@@ -17,6 +18,12 @@ services:
       - db-data-harvester-pass
       - db-backend-user
       - db-backend-pass
+    volumes:
+      - db-data:/data/db
+      - cert-public:/etc/ssl/certs/flags
+      - cert-private:/etc/ssl/private/flags
+      - db-logs:/var/log/mongodb
+      - db-dumps:/var/mongo/dumps
     ports:
       - "27017:27017"
     networks:
