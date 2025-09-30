@@ -63,8 +63,16 @@ services:
       - flags
     volumes:
       - data-harvest-logs:/opt/flags/logs
+      - data-harvest-data:/opt/flags/data
       - cert-public:/etc/ssl/certs/flags
       - cert-private:/etc/ssl/private/flags
+    post_start:
+      - command: chown -R flags-data-harvester:flags-data-harvester 
+                 /opt/flags/logs 
+                 /opt/flags/data && 
+                 chmod -R 700 /opt/flags/logs /opt/flags/data
+        user: root
+    command: ["--storage", "db"]
   cert-manager:
     build:
       context: Certificate-Manager
@@ -79,6 +87,7 @@ volumes:
   cert-public:
   cert-private:
   data-harvest-logs:
+  data-harvest-data:
   be-cache:
   be-nginx-logs:
   fe-nginx-logs:
